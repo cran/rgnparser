@@ -3,7 +3,11 @@ rgnparser
 
 
 
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![cran checks](https://cranchecks.info/badges/worst/rgnparser)](https://cranchecks.info/pkgs/rgnparser)
 [![R-check](https://github.com/ropensci/rgnparser/workflows/R-check/badge.svg)](https://github.com/ropensci/rgnparser/actions/)
+[![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/rgnparser)](https://github.com/r-hub/cranlogs.app)
+[![cran version](https://www.r-pkg.org/badges/version/rgnparser)](https://cran.r-project.org/package=rgnparser)
 
 **rgnparser**: Parse Scientific Names
 
@@ -28,7 +32,7 @@ library("rgnparser")
 The command line tool written in Go, gnparser, is required to use this package.
 
 If you want to install gnparser on your own, instructions can be found at the
-gnparser repo (https://gitlab.com/gogna/gnparser)
+gnparser repo (https://github.com/gnames/gnparser)
 
 There is a helper function in **rgnparser** for downloading and installing
 gnparser on major operating systems (macOS, Windows, Linux):
@@ -49,5 +53,3 @@ version to install. You can also install gnparser outside of R yourself
 * License: MIT
 * Get citation information for `rgnparser` in R doing `citation(package = 'rgnparser')`
 * Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
-
-[![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

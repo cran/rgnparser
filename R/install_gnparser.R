@@ -1,7 +1,7 @@
 #' Install gnparser
 #'
-#' Download the appropriate gnparser executable for your platform and
-#' try to copy it to a system directory so \pkg{rgnparser} can run the
+#' Downloads the appropriate gnparser executable for your platform and
+#' tries to copy it to a system directory so \pkg{rgnparser} can run the
 #' `gnparser` command.
 #'
 #' This function tries to install gnparser to `Sys.getenv('APPDATA')` on
@@ -15,15 +15,17 @@
 #' executable for your operating system, especially if you are not on Windows
 #' or Mac or a major Linux distribution. When in doubt, read the gnparser
 #' documentation and install it yourself:
-#' https://gitlab.com/gogna/gnparser#installation
+#' https://github.com/gnames/gnparser#installation
 #' @export
-#' @param version The gnparser version number, e.g., `0.14.1`; the default
+#' @param version The gnparser version number, e.g., `1.0.0`; the default
 #' `latest` means the latest version (fetched from GitLab releases).
 #' Alternatively, this argument can take a file path of the zip archive or
 #' tarball of gnparser that has already been downloaded from GitLab,
-#' in which case it will not be downloaded again.
-#' @param force Whether to install gnparser even if it has already been installed.
-#' This may be useful when upgrading gnparser.
+#' in which case it will not be downloaded again. The minimum version
+#' is `v1.0.0` because gnparser v1 introduced breaking changes - and 
+#' we don't support older versions of gnparser here.
+#' @param force Whether to install gnparser even if it has already been
+#' installed. This may be useful when upgrading gnparser.
 #' @note modified from `blogdown::install_hugo`
 install_gnparser = function(version = 'latest', force = FALSE) {
   if (Sys.which('gnparser') != '' && !force) {
@@ -36,10 +38,9 @@ install_gnparser = function(version = 'latest', force = FALSE) {
 
   if (version == 'latest') {
     json <- jsonlite::fromJSON(
-      'https://gitlab.com/gogna/gnparser/-/releases.json')
-    version <- json$tag[1]
-    pattern <- "/uploads/[A-Za-z0-9]+/gnparser-%s-[a-z0-9-]+\\.(tar.gz|zip)"
-    urls <- strextract(json$description[1], sprintf(pattern, version))[[1]]
+      'https://api.github.com/repos/gnames/gnparser/releases')
+    version <- json$tag_name[1]
+    urls <- json$assets[[1]]$browser_download_url
     message('The latest gnparser version is ', version)
   }
 
@@ -50,7 +51,6 @@ install_gnparser = function(version = 'latest', force = FALSE) {
 
   version <- gsub('^[vV]', '', version)  # pure version number
   version2 <- as.numeric_version(version)
-  url_base <- 'https://gitlab.com/gogna/gnparser'
   owd <- setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
   # unlink(sprintf('gnparser_%s*', version), recursive = TRUE)
@@ -58,8 +58,7 @@ install_gnparser = function(version = 'latest', force = FALSE) {
   download_file = function(os, ext = '.tar.gz') {
     if (is.null(local_file)) {
       file <- sprintf('gnparser-v%s-%s%s', version, os, ext)
-      utils::download.file(paste0(url_base, grep(os, urls, value=TRUE)), file,
-        mode = 'wb')
+      utils::download.file(grep(os, urls, value = TRUE), file, mode = 'wb')
     } else {
       file <- local_file
       ext <- strextract(file, "\\.tar\\.gz|\\.zip")[[1]]

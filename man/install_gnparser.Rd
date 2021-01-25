@@ -7,18 +7,20 @@
 install_gnparser(version = "latest", force = FALSE)
 }
 \arguments{
-\item{version}{The gnparser version number, e.g., \verb{0.14.1}; the default
+\item{version}{The gnparser version number, e.g., \verb{1.0.0}; the default
 \code{latest} means the latest version (fetched from GitLab releases).
 Alternatively, this argument can take a file path of the zip archive or
 tarball of gnparser that has already been downloaded from GitLab,
-in which case it will not be downloaded again.}
+in which case it will not be downloaded again. The minimum version
+is \code{v1.0.0} because gnparser v1 introduced breaking changes - and
+we don't support older versions of gnparser here.}
 
-\item{force}{Whether to install gnparser even if it has already been installed.
-This may be useful when upgrading gnparser.}
+\item{force}{Whether to install gnparser even if it has already been
+installed. This may be useful when upgrading gnparser.}
 }
 \description{
-Download the appropriate gnparser executable for your platform and
-try to copy it to a system directory so \pkg{rgnparser} can run the
+Downloads the appropriate gnparser executable for your platform and
+tries to copy it to a system directory so \pkg{rgnparser} can run the
 \code{gnparser} command.
 }
 \details{
@@ -33,7 +35,7 @@ This is just a helper function and may fail to choose the correct gnparser
 executable for your operating system, especially if you are not on Windows
 or Mac or a major Linux distribution. When in doubt, read the gnparser
 documentation and install it yourself:
-https://gitlab.com/gogna/gnparser#installation
+https://github.com/gnames/gnparser#installation
 }
 \note{
 modified from \code{blogdown::install_hugo}

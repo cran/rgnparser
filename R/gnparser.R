@@ -35,10 +35,21 @@ find_gnparser = local({
   }
 })
 
-parse_one <- function(x, format = NULL, threads = NULL) {
+parse_one <- function(x, format = NULL, threads = NULL, 
+  batch_size = NULL, ignore_tags = NULL, details = FALSE) {
+
+  assert(format, "character")
+  assert(threads, c("integer", "numeric"))
+  assert(batch_size, c("integer", "numeric"))
+  assert(ignore_tags, "logical")
+  assert(details, "logical")
+
   args <- character(0)
   if (!is.null(format)) args <- c(args, "-f", format)
   if (!is.null(threads)) args <- c(args, "-j", threads)
+  if (!is.null(batch_size)) args <- c(args, "-b", batch_size)
+  if (!is.null(ignore_tags)) args <- c(args, "-i")
+  if (details) args <- c(args, "-d")
   z <- gnparser_cmd(c(args, x), error = FALSE)
   err_chk(z)
   return(rawToChar(z$stdout))
@@ -47,6 +58,25 @@ parse_one <- function(x, format = NULL, threads = NULL) {
 gnparser_exists <- function() {
   check_gnp <- gnparser_cmd()
   if (check_gnp$status != 0) stop("`gnparser` not found, see ?install_gnparser")
+  return(TRUE)
+}
+
+process_version_string <- function(x) {
+  txt <- rawToChar(x)
+  txt <- strsplit(txt, "\n")[[1]]
+  unlist(lapply(txt[nzchar(txt)], function(w) {
+    tmp <- gsub("\\s", "", strsplit(w, ":\\s")[[1]])
+    stats::setNames(list(tmp[2]), tmp[1])
+  }), FALSE)
+}
+
+ver_check <- function(version) {
+  # ver <- gnparser_cmd("-V", error = FALSE)
+  # if (ver$status != 0) ver <- gnparser_cmd("-v", error = FALSE)
+  # ver <- process_version_string(ver$stdout)
+  ver <- gn_version()
+  ver_first_num <- as.numeric(substring(gsub("v|\\.", "", ver$version), 1, 1))
+  if (ver_first_num < version) stop("you need `gnparser` v1 or greater, see ?install_gnparser")
   return(TRUE)
 }
 
