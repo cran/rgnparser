@@ -29,27 +29,34 @@ find_gnparser = local({
   gnpenv$path = NULL  # cache the path to gnparser
   function() {
     if (is.null(gnpenv$path)) gnpenv$path <- find_exec(
-      'gnparser', 'gnparser', 'You can install it via rgnparser::install_gnparser()'
+      'gnparser', 'gnparser', 'You need to install gnparser'
     )
     gnpenv$path
   }
 })
 
 parse_one <- function(x, format = NULL, threads = NULL, 
-  batch_size = NULL, ignore_tags = NULL, details = FALSE) {
+  batch_size = NULL, ignore_tags = NULL, cultivar = FALSE,
+  capitalize = FALSE, diaereses = FALSE, details = FALSE) {
 
   assert(format, "character")
-  assert(threads, c("integer", "numeric"))
+  assert(threads, c("integer", "numeric")) # NULL OK
   assert(batch_size, c("integer", "numeric"))
   assert(ignore_tags, "logical")
+  assert(cultivar, "logical")
+  assert(capitalize, "logical")
+  assert(diaereses, "logical")
   assert(details, "logical")
 
   args <- character(0)
-  if (!is.null(format)) args <- c(args, "-f", format)
-  if (!is.null(threads)) args <- c(args, "-j", threads)
-  if (!is.null(batch_size)) args <- c(args, "-b", batch_size)
-  if (!is.null(ignore_tags)) args <- c(args, "-i")
-  if (details) args <- c(args, "-d")
+  if (!is.null(format)) args <- c(args, "--format", format)
+  if (!is.null(threads)) args <- c(args, "--jobs", threads)
+  if (!is.null(batch_size)) args <- c(args, "--batch_size", batch_size)
+  if (ignore_tags) args <- c(args, "--ignore_tags")
+  if (cultivar) args <- c(args, "--cultivar")
+  if (capitalize) args <- c(args, "--capitalize")
+  if (diaereses) args <- c(args, "--diaereses")
+  if (details) args <- c(args, "--details")
   z <- gnparser_cmd(c(args, x), error = FALSE)
   err_chk(z)
   return(rawToChar(z$stdout))
@@ -57,7 +64,7 @@ parse_one <- function(x, format = NULL, threads = NULL,
 
 gnparser_exists <- function() {
   check_gnp <- gnparser_cmd()
-  if (check_gnp$status != 0) stop("`gnparser` not found, see ?install_gnparser")
+  if (check_gnp$status != 0) stop("You need to install gnparser")
   return(TRUE)
 }
 
@@ -76,7 +83,7 @@ ver_check <- function(version) {
   # ver <- process_version_string(ver$stdout)
   ver <- gn_version()
   ver_first_num <- as.numeric(substring(gsub("v|\\.", "", ver$version), 1, 1))
-  if (ver_first_num < version) stop("you need `gnparser` v1 or greater, see ?install_gnparser")
+  if (ver_first_num < version) stop("you need to install `gnparser` v1 or greater")
   return(TRUE)
 }
 

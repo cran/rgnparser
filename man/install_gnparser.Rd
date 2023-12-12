@@ -4,13 +4,13 @@
 \alias{install_gnparser}
 \title{Install gnparser}
 \usage{
-install_gnparser(version = "latest", force = FALSE)
+install_gnparser(version, force)
 }
 \arguments{
 \item{version}{The gnparser version number, e.g., \verb{1.0.0}; the default
-\code{latest} means the latest version (fetched from GitHub releases).
+\code{latest} means the latest version (fetched from GitLab releases).
 Alternatively, this argument can take a file path of the zip archive or
-tarball of gnparser that has already been downloaded from GitHub,
+tarball of gnparser that has already been downloaded from GitLab,
 in which case it will not be downloaded again. The minimum version
 is \code{v1.0.0} because gnparser v1 introduced breaking changes - and
 we don't support older versions of gnparser here.}
@@ -19,24 +19,22 @@ we don't support older versions of gnparser here.}
 installed. This may be useful when upgrading gnparser.}
 }
 \description{
-Downloads the appropriate gnparser executable for your platform and
-tries to copy it to a system directory so \pkg{rgnparser} can run the
-\code{gnparser} command.
-}
-\details{
-This function tries to install gnparser to \code{Sys.getenv('APPDATA')} on
-Windows, \verb{~/Library/Application Support} on macOS, and \verb{~/bin/} on
-other platforms (such as Linux). If these directories are not writable, the
-package directory \code{gnparser} of \pkg{rgnparser} will be used. If it
-still fails, you have to install gnparser by yourself and make sure it can
-be found via the environment variable \code{PATH}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+\subsection{Reason for deprecating}{
 
-This is just a helper function and may fail to choose the correct gnparser
-executable for your operating system, especially if you are not on Windows
-or Mac or a major Linux distribution. When in doubt, read the gnparser
-documentation and install it yourself:
-https://github.com/gnames/gnparser#installation
+The function used to download the appropriate \code{gnparser} executable for your
+platform and try to copy it to a system directory so \pkg{rgnparser} can run
+the \code{gnparser} command.
+This function was deprecated to stay in compliance with CRAN policies
+("Packages should not write in the user’s home filespace, nor anywhere else
+on the file system apart from the R session’s temporary directory")
 }
-\note{
-modified from \code{blogdown::install_hugo}
+
+\subsection{Solution}{
+
+Please install \code{gnparser} by hand.
+For Linux and Mac users, installing with your usual package manager such as
+homebrew is the easiest, see \code{gnparser} documentation for more details:
+\url{https://github.com/gnames/gnparser#installation}
+}
 }
